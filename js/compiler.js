@@ -59,7 +59,7 @@ compiler.prototype = {
      * 2、把值添加到dom中
      * 3、构建watcher，添加监听
      */
-    const initText = this.vm[exp]
+    const initText = getDataVal(this.vm, exp)
 
     this.updateText(node, initText);
 
