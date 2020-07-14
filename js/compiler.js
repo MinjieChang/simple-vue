@@ -51,7 +51,26 @@ compiler.prototype = {
     })
   },
   // 解析dom节点
-  compile(node){},
+  compile(node) {
+    // 解析自定义指令
+    const attrs = Array.from(node.attributes);
+    attrs.forEach(attr => {
+      const name = attr.name
+      if(this.isDirective(attr.name)){
+        const dir = name.substring(2)
+        const value = attr.value
+        if(this.isEventDirective(dir)){
+          console.log(dir, 'event')
+        }
+        if(this.isBindDirective(dir)){
+          console.log(dir, 'bind')
+        }
+        if(this.isModelDirective(dir)){
+          console.log(dir, 'mm')
+        }
+      }
+    })
+  },
   // 解析文本节点
   compileTextNode(node, exp){
     /**
@@ -70,6 +89,20 @@ compiler.prototype = {
   },
   updateText(node, text = '') {
     node.textContent = text
+  },
+  // 是否为自定义指令
+  isDirective(attr = ''){
+    console.log(typeof attr, '999')
+    return attr.indexOf('v-') > -1
+  },
+  isEventDirective(dir){
+    return dir.trim().indexOf('on:') > -1
+  },
+  isBindDirective(dir){
+    return dir.trim().indexOf('bind') > -1
+  },
+  isModelDirective(dir){
+    return dir.trim().indexOf('model') > -1
   },
   isElementNode(node){
     return node.nodeType === 1

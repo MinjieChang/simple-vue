@@ -1,9 +1,9 @@
 function MyVue(option){
 
-  const { data, el } = option
+  const { data, el, methods } = option
 
   this.data = data
-
+  this.methods = methods
   // 代理data的属性到this
   // this.xxx = this.data.xxx
   this.proxyData()
