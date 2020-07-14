@@ -15,12 +15,16 @@ function proxyArr() {
 function defineReactive(data, key, value){
   // 对value继续遍历，如果是对象，则继续代理
   observer(value)
+  const dep = new Dep()
   Object.defineProperty(data, key, {
     enumerable: true,
     configurable: true,
     get(){
       // 这里要添加订阅者，那么订阅者是谁？
       console.log(key, 'get key')
+      if(Dep.target) {
+        dep.addSub(Dep.target)
+      }
       return value
     },
     set(newVal){
@@ -29,7 +33,7 @@ function defineReactive(data, key, value){
       }
       value = newVal;
       // 这里要通知订阅者
-      console.log(newVal, 'newVal')
+      dep.notify(newVal)
     }
   })
 }
@@ -39,12 +43,29 @@ function observer(obj) {
     return
   }
   // 代理数组 Todo
-  if(Array.isArray(obj)){
-    proxyArr()
-  }
+  // if(Array.isArray(obj)){
+  //   proxyArr()
+  // }
   // 代理对象
   Object.keys(obj).forEach(key => {
     const value = obj[key];
     defineReactive(obj, key, value)
   })
+}
+
+function Dep(){
+  this.subs = []
+}
+
+Dep.prototype = {
+  addSub(watcher) {
+    this.subs.push(watcher)
+  },
+  notify(value){
+    this.subs.forEach(watcher => {
+      if(watcher){
+        watcher.update(value)
+      }
+    })
+  }
 }

@@ -59,13 +59,13 @@ compiler.prototype = {
      * 2、把值添加到dom中
      * 3、构建watcher，添加监听
      */
-    // 注意，这里会到data 的getter方法
     const initText = this.vm[exp]
 
     this.updateText(node, initText);
 
-    new watcher(this.vm, exp, function(value){
-      console.log('watcher数据更新啦======', exp, value)
+    // 在这里 给data的每个属性添加一个监听者
+    new watcher(this.vm, exp, (value) => {
+      this.updateText(node, value)
     })
   },
   updateText(node, text = '') {
