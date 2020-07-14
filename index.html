@@ -6,8 +6,15 @@
   <title>Document</title>
 </head>
 <body>
-  <div id='app'></div>
+  <div id='app'>
+    {{a}}
+    <div>{{b}}</div>
+    <div v-bind="b"></div>
+    <input v-model="g"></input>
+  </div>
+  <script src="./js/watcher.js"></script>
   <script src="./js/observer.js"></script>
+  <script src="./js/compiler.js"></script>
   <script src="./js/index.js"></script>
   <script>
 
@@ -18,10 +25,13 @@
         d: 3,
         e: 4,
       },
-      f: [5, 6, 7]
+      f: [5, 6, 7],
+      g: 8
     }
-
-    observer(d)
+    new MyVue({
+      data: d,
+      el: '#app'
+    })
   </script>
 </body>
 </html>
