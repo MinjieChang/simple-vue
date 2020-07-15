@@ -59,15 +59,19 @@ compiler.prototype = {
       if(this.isDirective(attr.name)){
         const dir = name.substring(2)
         const value = attr.value
+        // 解析事件绑定
         if(this.isEventDirective(dir)){
-          console.log(dir, 'event')
+          this.compileEvent(node, dir, value)
         }
+        // 解析属性bind
         if(this.isBindDirective(dir)){
-          console.log(dir, 'bind')
+          this.compileBind(node, dir, value)
         }
+        // 解析 v-model
         if(this.isModelDirective(dir)){
           console.log(dir, 'mm')
         }
+        node.removeAttribute(name)
       }
     })
   },
@@ -86,6 +90,30 @@ compiler.prototype = {
     new watcher(this.vm, exp, (value) => {
       this.updateText(node, value)
     })
+  },
+  compileEvent(node, dir, method){
+    //v-on:click="clickMe"
+    // 给node绑定事件
+    const eventName = dir.split(':')[1]
+
+    const errorTip = () => {console.warn(`${bindMethod}未定义`)}
+
+    let bindVmMethod = this.vm.methods[method]
+
+    if (bindVmMethod) {
+      bindVmMethod = bindVmMethod.bind(this.vm)
+    }
+    const bindMethod = bindVmMethod || errorTip
+
+    node.addEventListener(eventName, bindMethod)
+  },
+  compileBind(node, dir, exp){
+    // v-bind:href="url"
+    const attr = dir.split(':')[1];
+
+    const vmVal = this.vm[exp]
+
+    node.setAttribute(attr, vmVal)
   },
   updateText(node, text = '') {
     node.textContent = text

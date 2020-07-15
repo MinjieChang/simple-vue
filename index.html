@@ -9,8 +9,8 @@
   <div id='app'>
     {{c.d}}
     <div>{{b}}</div>
-    <div v-on:click="clickMe"></div>
-    <div v-bind="b"></div>
+    <div v-on:click="clickMe">clickMe</div>
+    <a v-bind:href="url">a标签</a>
     <input v-model="g"></input>
   </div>
   <script src="./js/util.js"></script>
@@ -28,14 +28,15 @@
         e: 4,
       },
       f: [5, 6, 7],
-      g: 8
+      g: 8,
+      url: 'https://minjiechang.github.io/'
     }
     new MyVue({
       data: d,
       el: '#app',
       methods: {
         clickMe(){
-          console.log('click me')
+          this.c.d++
         }
       }
     })
