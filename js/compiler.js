@@ -9,7 +9,6 @@ compiler.prototype = {
     if(this.el){
       // 首先将 el转为fragment片段
       this.fragment = this.nodeToFragment(this.el)
-      console.log(this.fragment, 'fragment')
       // 解析 fragment
       this.compileElement(this.fragment)
       this.el.appendChild(this.fragment)
@@ -30,10 +29,8 @@ compiler.prototype = {
   compileElement(el){
     let childNodes = el.childNodes;
     [].slice.call(childNodes).forEach(node => {
+      
       // 判断 {{}}
-      // console.log(node, 'element');
-      // console.log(node.nodeType, 'nodeType');
-
       let reg = /\{\{(.*)\}\}/
       let text = node.textContent;
       
@@ -69,7 +66,7 @@ compiler.prototype = {
         }
         // 解析 v-model
         if(this.isModelDirective(dir)){
-          console.log(dir, 'mm')
+          this.compileModel(node, dir, value)
         }
         node.removeAttribute(name)
       }
@@ -113,14 +110,41 @@ compiler.prototype = {
 
     const vmVal = this.vm[exp]
 
+    this.updateBind(node, attr, vmVal)
+
+    new watcher(this.vm, exp, (value) => {
+      this.updateBind(node, attr, value)
+    })
+
+  },
+  compileModel(node, dir, exp){
+    // v-model="g"
+    const attr = dir.split(':')[1];
+
+    const vmVal = this.vm[exp]
+    
+    this.updateModel(node, vmVal);
+
+    // 监听数据，更新view
+    new watcher(this.vm, exp, (value) => {
+      this.updateModel(node, value)
+    })
+    // 监听view事件，更新数据
+    node.addEventListener('input', (e) => {
+      this.vm[exp] = e.target.value
+    })
+  },
+  updateBind(node, attr, vmVal){
     node.setAttribute(attr, vmVal)
+  },
+  updateModel(node, vmVal){
+    node.value = vmVal
   },
   updateText(node, text = '') {
     node.textContent = text
   },
   // 是否为自定义指令
   isDirective(attr = ''){
-    console.log(typeof attr, '999')
     return attr.indexOf('v-') > -1
   },
   isEventDirective(dir){

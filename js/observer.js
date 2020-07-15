@@ -21,7 +21,6 @@ function defineReactive(data, key, value){
     configurable: true,
     get(){
       // 这里要添加订阅者，那么订阅者是谁？
-      console.log(key, 'get key')
       if(Dep.target) {
         dep.addSub(Dep.target)
       }

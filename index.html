@@ -10,8 +10,10 @@
     {{c.d}}
     <div>{{b}}</div>
     <div v-on:click="clickMe">clickMe</div>
-    <a v-bind:href="url">a标签</a>
     <input v-model="g"></input>
+    <div>{{g}}</div>
+    <a v-bind:href="url">a标签{{url}}</a>
+    <button v-on:click="updateUrl">点击更新标签</button>
   </div>
   <script src="./js/util.js"></script>
   <script src="./js/watcher.js"></script>
@@ -36,7 +38,10 @@
       el: '#app',
       methods: {
         clickMe(){
-          this.c.d++
+          this.g++
+        },
+        updateUrl(){
+          this.url += '#'
         }
       }
     })
