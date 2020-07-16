@@ -9,11 +9,21 @@
   <div id='app'>
     {{c.d}}
     <div>{{b}}</div>
-    <div v-on:click="clickMe">clickMe</div>
+    <button v-on:click="clickMe">clickMe</button>
     <input v-model="g"></input>
     <div>{{g}}</div>
     <a v-bind:href="url">a标签{{url}}</a>
     <button v-on:click="updateUrl">点击更新标签</button>
+    <div>
+      <button v-on:click="push">push</button>
+      <button v-on:click="pop">pop</button>
+      <button v-on:click="reverse">reverse</button>
+    </div>
+    <ul>
+      <li v-for="item in f" v-bind:key="item">
+        {{ item }}
+      </li>
+    </ul>
   </div>
   <script src="./js/util.js"></script>
   <script src="./js/watcher.js"></script>
@@ -39,6 +49,16 @@
       methods: {
         clickMe(){
           this.g++
+        },
+        push(){
+          let num = this.f[this.f.length - 1] || 0
+          this.f.push(++num)
+        },
+        pop(){
+          this.f.pop()
+        },
+        reverse(){
+          this.f.reverse()
         },
         updateUrl(){
           this.url += '#'

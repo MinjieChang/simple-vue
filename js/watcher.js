@@ -21,10 +21,14 @@ watcher.prototype = {
 
     return value
   },
-  update(value) {
+  update() {
+    let value = this.vm[this.exp]
     let oldVal = this.value
-    if(oldVal !== value ){
-      this.cb.call(this.vm, value, oldVal)
-    }
+
+    // 如果是碰到数组，使用的push 或者 pop 方法修改数组，那么value 和 oldVal是相等的，引用的是同一个值
+    this.cb.call(this.vm, value, oldVal)
+    // if(oldVal !== value ){
+    //   this.cb.call(this.vm, value, oldVal)
+    // }
   },
 }

@@ -29,7 +29,7 @@ compiler.prototype = {
   compileElement(el){
     let childNodes = el.childNodes;
     [].slice.call(childNodes).forEach(node => {
-      
+      // console.log(node, 'node')
       // 判断 {{}}
       let reg = /\{\{(.*)\}\}/
       let text = node.textContent;
@@ -53,6 +53,7 @@ compiler.prototype = {
     const attrs = Array.from(node.attributes);
     attrs.forEach(attr => {
       const name = attr.name
+      // v- 指令
       if(this.isDirective(attr.name)){
         const dir = name.substring(2)
         const value = attr.value
@@ -67,6 +68,10 @@ compiler.prototype = {
         // 解析 v-model
         if(this.isModelDirective(dir)){
           this.compileModel(node, dir, value)
+        }
+        // 解析 v-for
+        if(this.isForDirective(dir)){
+          this.compileFor(node, dir, value)
         }
         node.removeAttribute(name)
       }
@@ -134,6 +139,50 @@ compiler.prototype = {
       this.vm[exp] = e.target.value
     })
   },
+  compileFor(node, dir, exp) {
+    // v-for="item in f"
+    exp = exp.split('in')[1].trim()
+
+    const vmVal = this.vm[exp]
+    
+    const parentNode = node.parentNode
+
+    new watcher(this.vm, exp, (value) => {
+      this.updateFor(node, parentNode, value)
+    })
+
+    this.initFor(node, parentNode, vmVal)
+
+  },
+  createFragmentWithChild(node, vmVal = []) {
+
+    const fragment = document.createDocumentFragment();
+
+    vmVal.forEach(item => {
+      let childNode = document.createElement(node.nodeName)
+      childNode.textContent = item
+      fragment.appendChild(childNode)
+    })
+
+    return fragment
+  },
+  initFor(node, parentNode, vmVal){
+
+    const fragment = this.createFragmentWithChild(node, vmVal)
+    // node 存在是初始化的时候，初始化完成会被删除
+    parentNode.appendChild(fragment)
+    parentNode.removeChild(node)
+  },
+  updateFor(node, parentNode, vmVal) {
+    // 更新阶段，删除子节点
+    [].slice.call(parentNode.childNodes).forEach(child => {
+      parentNode.removeChild(child)
+    })
+    // 再添加新的节点
+    // 当然，这种先删除再添加的方法很粗糙，性能不好，所以需要vdom
+    const fragment = this.createFragmentWithChild(node, vmVal)
+    parentNode.appendChild(fragment)
+  },
   updateBind(node, attr, vmVal){
     node.setAttribute(attr, vmVal)
   },
@@ -155,6 +204,9 @@ compiler.prototype = {
   },
   isModelDirective(dir){
     return dir.trim().indexOf('model') > -1
+  },
+  isForDirective(dir){
+    return dir.trim().indexOf('for') > -1
   },
   isElementNode(node){
     return node.nodeType === 1
