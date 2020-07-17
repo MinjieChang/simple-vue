@@ -9,7 +9,7 @@ function MyVue(option){
   this.proxyData()
 
   // 对象数据劫持
-  new observer(data, this)
+  observer(data, this)
 
   // 模版编译，初始化数据，建立watcher
   new compiler(el, this)

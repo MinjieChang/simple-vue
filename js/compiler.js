@@ -142,10 +142,10 @@ compiler.prototype = {
   compileFor(node, dir, exp) {
     // v-for="item in f"
     exp = exp.split('in')[1].trim()
-
-    const vmVal = this.vm[exp]
     
     const parentNode = node.parentNode
+
+    const vmVal = this.vm[exp]
 
     new watcher(this.vm, exp, (value) => {
       this.updateFor(node, parentNode, value)
@@ -160,7 +160,7 @@ compiler.prototype = {
 
     vmVal.forEach(item => {
       let childNode = document.createElement(node.nodeName)
-      childNode.textContent = item
+      childNode.textContent = typeof item === 'object' ? item.name : item
       fragment.appendChild(childNode)
     })
 
