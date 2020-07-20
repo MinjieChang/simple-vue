@@ -16,6 +16,11 @@ watcher.prototype = {
     // 就是，a、b、c这三个属性绑定的监听者都是同一个watcher
     let value = getDataVal(this.vm, this.exp)
 
+    // 判断返回的值是否为数组类型
+    // 主要是强制取出数组中的元素，判断其中的元素是否为对象，如果是对象，那么如果对象的值发生变化后，就通知数组的观察者
+    if(Array.isArray(value)){
+      obArray(value)
+    }
     // 监听者被添加后释放自己，避免被重复缓存
     Dep.target = null
 

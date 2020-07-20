@@ -152,7 +152,7 @@ Observer.prototype = {
   },
   observeArray(data = []) {
     data.forEach(ele => {
-      observer(ele)
+      observer(ele, this.vm)
     })
   }
 }
