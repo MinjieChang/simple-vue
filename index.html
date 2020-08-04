@@ -52,6 +52,11 @@
           return this.a + this.g
         }
       },
+      watcher: {
+        g: function(value, oldVal) {
+          console.log('g 更新了，新值是：', value, '老值是：', oldVal)
+        }
+      },
       methods: {
         clickMe(){
           this.g++

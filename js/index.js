@@ -1,10 +1,11 @@
 function MyVue(option){
 
-  const { data, el, methods, computed } = option
+  const { data, el, methods, computed, watcher } = option
 
   this.data = data
   this.methods = methods
   this.computed = computed
+  this.watcher = watcher
   // 代理data的属性到this
   // this.xxx = this.data.xxx
   this.proxyData()
@@ -14,6 +15,9 @@ function MyVue(option){
 
   // 对象数据劫持
   observer(data, this)
+
+  // 代理watcher，注意，监听watcher需要放到 observer 之后，此时data劫持了getter和setter后，添加watcher才生效
+  this.proxyWatcher()
 
   // 模版编译，初始化数据，建立watcher
   new compiler(el, this)
@@ -57,6 +61,18 @@ MyVue.prototype.proxyComputed = function() {
       get(){
         return this.computed[key].call(this)
       },
+    })
+  })
+}
+
+MyVue.prototype.proxyWatcher = function() {
+  Object.keys(this.watcher).forEach(key => {
+    // 当属性值变化后，调用watcher函数
+    let oldVal = this[key]
+    new watcher(this, key, () => {
+      this.watcher[key].call(this, this[key], oldVal)
+      // 更新旧的值
+      oldVal = this[key]
     })
   })
 }

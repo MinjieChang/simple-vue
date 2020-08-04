@@ -41,7 +41,7 @@
 
 > 效果图
 
-![](http://qd13dqh4u.bkt.clouddn.com/myvue.gif)
+![](https://pic.ioiox.com/images/2020/08/27/2c56e24390bfc7306be82f84a6d26285.gif)
 
 ## 启动
 
