@@ -12,6 +12,7 @@
     <button v-on:click="clickMe">clickMe</button>
     <input v-model="g"></input>
     <div>{{g}}</div>
+    <div><span>计算属性：</span>{{getAge}}</div>
     <a v-bind:href="url">a标签{{url}}</a>
     <button v-on:click="updateUrl">点击更新标签</button>
     <div>
@@ -46,6 +47,11 @@
     new MyVue({
       data: d,
       el: '#app',
+      computed: {
+        getAge() {
+          return this.a + this.g
+        }
+      },
       methods: {
         clickMe(){
           this.g++

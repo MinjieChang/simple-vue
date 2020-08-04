@@ -42,3 +42,7 @@
 > 效果图
 
 ![](http://qd13dqh4u.bkt.clouddn.com/myvue.gif)
+
+## 启动
+
+index.html 在浏览器中打开，或启动一个本地服务
