@@ -37,7 +37,7 @@
 - v-model
 - v-for
 
-[在线演示](https://minjiechang.github.io/my-vue/)
+[在线演示](https://minjiechang.github.io/simple-vue/)
 
 > 效果图
 
