@@ -29,11 +29,11 @@
 
 ### compiler
 
-#### 解析文本
+#### 1. 解析文本
 
 - {{xxx}}
 
-#### 解析自定义指令
+#### 2. 解析自定义指令
 
 - v-bind
 - v-model
@@ -41,7 +41,7 @@
 
 [在线演示](https://minjiechang.github.io/simple-vue/)
 
-#### 效果图
+#### 3. 效果图
 
 ![image](https://pic.ioiox.com/images/2020/08/27/2c56e24390bfc7306be82f84a6d26285.gif)
 
